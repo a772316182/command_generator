@@ -1,5 +1,3 @@
-import {h} from "vue";
-
 function getAllExperiments() {
     if (localStorage.hasOwnProperty("experiments")) {
         return JSON.parse(localStorage.getItem('experiments'))
@@ -46,8 +44,17 @@ function getAllHistory() {
     return history
 }
 
+function deleteExistingHistory(history) {
+    let allHistory = getAllHistory()
+    const index = allHistory.findIndex(item => item.UUID === history.UUID);
+    if (index !== -1) {
+        allHistory.splice(index, 1);
+    }
+    localStorage.setItem('experimentHistory', JSON.stringify(allHistory))
+}
+
 export {
     getAllExperiments, isHaveAnyExperiment,
     addNewExperiment, deleteExistingExperiment,
-    addANewHistory, getAllHistory
+    addANewHistory, getAllHistory, deleteExistingHistory
 }

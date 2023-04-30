@@ -9,7 +9,7 @@ function generateDemoCommand(main_entrance, params_array, params_order, is_run_i
     let log_name = ''
     // command
     for (let paramsArrayElement of params_array) {
-        if (paramsArrayElement.action){
+        if (paramsArrayElement.action) {
             command += `--${paramsArrayElement.name} `
         } else {
             command += `--${paramsArrayElement.name} ${getValueForDemoMode(paramsArrayElement.type, paramsArrayElement.action)} `
@@ -42,10 +42,13 @@ function generateExecCommand(main_entrance, params_array, params_order, is_run_i
     let log_name = ''
     // command
     for (let paramsArrayElement of params_array) {
-        if (paramsArrayElement.action){
+        let extractedParamValue = getValueForExecMode(paramsArrayElement.action, paramsArrayElement.value);
+        if (extractedParamValue === 'true') {
             command += `--${paramsArrayElement.name} `
-        } else {
-            command += `--${paramsArrayElement.name} ${getValueForExecMode(paramsArrayElement.action, paramsArrayElement.value)} `
+        } else if (extractedParamValue === 'false') {
+            command += ''
+        } else if (extractedParamValue !== null && extractedParamValue !== undefined && extractedParamValue !== 'null') {
+            command += `--${paramsArrayElement.name} ${extractedParamValue} `
         }
     }
     // log_name
@@ -53,11 +56,11 @@ function generateExecCommand(main_entrance, params_array, params_order, is_run_i
         let paramType = params_array.find(item => item.name === paramsOrderElement.name).type
         let paramAction = params_array.find(item => item.name === paramsOrderElement.name).action
         let paramValue = params_array.find(item => item.name === paramsOrderElement.name).value
-
+        let extractedParamValue = getValueForExecMode(paramAction, paramValue)
         if (is_show_param_name) {
-            log_name += `${paramsOrderElement.name}@${getValueForExecMode(paramAction,paramValue)}`
+            log_name += `${paramsOrderElement.name}@${extractedParamValue}`
         } else {
-            log_name += `${getValueForExecMode(paramAction,paramValue)}`
+            log_name += `${extractedParamValue}`
         }
         if (index !== params_order.length - 1) log_name += '__'
     }
@@ -87,9 +90,9 @@ function getValueForExecMode(paramAction, paramValue) {
     if (paramAction === 'store_true') {
         console.log(paramValue)
         if (paramValue === true) {
-            return ''
+            return 'true'
         } else {
-            return null
+            return 'false'
         }
     } else {
         return paramValue ? paramValue : null

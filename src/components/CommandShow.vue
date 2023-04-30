@@ -6,6 +6,8 @@
             <v-switch label="日志文件中体现参数名称" v-model="showParamName" @change="generateCommand"></v-switch>
         </v-row>
         {{ params_order }}
+        <hr>
+        {{ params_array }}
         <v-row>
             <v-textarea
                     :value="generateCommand(this.runInBack, this.showParamName, this.main_entrance, this.params_order, this.params_array)"
@@ -15,7 +17,7 @@
 </template>
 
 <script>
-import {generateDemoCommand, generateExecCommand} from "@/utils/command_formater";
+import {generateDemoCommand, generateExecCommand} from "@/utils/commandGeneratorUtils";
 
 export default {
     name: "CommandShow",

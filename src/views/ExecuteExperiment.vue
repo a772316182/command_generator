@@ -1,6 +1,7 @@
 <template>
     <v-container>
         <v-alert type="info">实验：{{ experiment_name }}</v-alert>
+        <br>
         <v-row>
             <command-dashboard :param="params_classified" @updateValue="updateValue"
                                :justShowDefaultValue="false"></command-dashboard>
@@ -24,6 +25,7 @@
 import CommandDashboard from "@/components/CommandDashboard.vue";
 import CommandShow from "@/components/CommandShow.vue";
 import {addANewHistory} from "@/utils/localStorageManager";
+import {uuid} from "@/utils/uuid";
 
 export default {
     name: "ExecuteExperiment",
@@ -72,7 +74,8 @@ export default {
                 params_array: this.params_array,
                 main_entrance: this.main_entrance,
                 command: command,
-                execTime: new Date().toLocaleString()
+                execTime: new Date().toLocaleString(),
+                UUID: uuid()
             })
             if (navigator.clipboard && window.isSecureContext) {
                 navigator.clipboard.writeText(command).then(() => {

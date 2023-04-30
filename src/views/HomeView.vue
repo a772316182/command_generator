@@ -9,7 +9,7 @@
                 <v-btn block color="warning" elevation="0">从备份文件导入</v-btn>
             </v-col>
             <v-col cols="4">
-                <v-btn block color="error" elevation="0">导出到备份文件</v-btn>
+                <v-btn block color="error" elevation="0" @click="exportData">导出到备份文件</v-btn>
             </v-col>
         </v-row>
         <v-row>
@@ -49,7 +49,12 @@
 
 <script>
 
-import {deleteExistingExperiment, getAllExperiments, isHaveAnyExperiment} from "@/utils/localStorageManager";
+import {
+    deleteExistingExperiment,
+    getAllExperiments,
+    getAllHistory,
+    isHaveAnyExperiment
+} from "@/utils/localStorageManager";
 
 export default {
     name: 'Home',
@@ -69,6 +74,20 @@ export default {
         deleteExperiment(experiment) {
             deleteExistingExperiment(experiment)
             this.experiments = getAllExperiments()
+        },
+        exportData() {
+            let eleLink = document.createElement('a');
+            eleLink.download = 'data.json';
+            eleLink.style.display = 'none';
+            let data = {
+                experiments: getAllExperiments(),
+                history: getAllHistory()
+            }
+            let blob = new Blob([JSON.stringify(data, undefined, 4)], {type: 'text/json'})
+            eleLink.href = URL.createObjectURL(blob);
+            document.body.appendChild(eleLink);
+            eleLink.click();
+            document.body.removeChild(eleLink);
         }
     },
     mounted() {
